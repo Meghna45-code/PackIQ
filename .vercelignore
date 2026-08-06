@@ -1,0 +1,13 @@
+# Git / OS artefacts
+.git
+.gitignore
+*.pyc
+__pycache__
+*.pyo
+.DS_Store
+
+# Local dev only
+backend/__pycache__
+backend/*.pyc
+frontend/node_modules
+frontend/.vite

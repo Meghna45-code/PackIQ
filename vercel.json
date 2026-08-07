@@ -12,6 +12,12 @@
     { "source": "/logs", "destination": "/api/index.py" },
     { "source": "/health", "destination": "/api/index.py" },
     { "source": "/api/(.*)", "destination": "/api/index.py" }
-  ]
+  ],
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.11",
+      "maxDuration": 60
+    }
+  }
 }
 

@@ -1,9 +1,14 @@
 import React from 'react';
-import { Activity, Clock, AlertTriangle, ShieldCheck, Cpu, Zap, ArrowUpRight, ArrowDownRight, Layers } from 'lucide-react';
+import { Activity, Clock, AlertTriangle, ShieldCheck, Cpu, Zap, ArrowUpRight, ArrowDownRight, Layers, Sparkles } from 'lucide-react';
 
 export default function ExecutiveOverview({ data, isLean, onSwitchToLean }) {
   if (!data || !data.simulation) {
-    return <div className="p-8 text-center text-[#FFF3E6]/60">Loading simulation metrics...</div>;
+    return (
+      <div className="h-96 flex flex-col items-center justify-center space-y-4 glass-panel rounded-3xl border border-[#CAD183]/30">
+        <div className="w-10 h-10 border-4 border-[#CAD183] border-t-transparent rounded-full animate-spin"></div>
+        <div className="text-sm font-semibold text-[#CAD183]">Computing Discrete Event Simulation Engine...</div>
+      </div>
+    );
   }
 
   const sim = data.simulation;
@@ -16,43 +21,79 @@ export default function ExecutiveOverview({ data, isLean, onSwitchToLean }) {
 
   return (
     <div className="space-y-6">
+      {/* Editorial Header Banner */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel rounded-3xl p-6 border border-[#CAD183]/30 shadow-2xl relative overflow-hidden">
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#CAD183]/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div>
+          <div className="flex items-center space-x-2">
+            <span className="badge-citron text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full">
+              Live Operational Dashboard
+            </span>
+            <span className="text-xs text-[#CAD183]/80 font-mono flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-[#CAD183]" /> PackIQ Analytics Suite
+            </span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#F8F9EE] font-serif-title mt-2 tracking-tight">
+            Fulfillment Center Executive Overview
+          </h2>
+          <p className="text-xs text-[#CAD183]/80 mt-1 max-w-2xl">
+            SimPy Discrete-Event Simulation metrics for 1,000 order throughput, statistical process control (Cpk), OEE availability, and packing-line bottleneck diagnostics.
+          </p>
+        </div>
+
+        {/* Quick Mode Indicator / Action Button */}
+        <div>
+          {!isLean ? (
+            <button
+              onClick={onSwitchToLean}
+              className="btn-citron px-5 py-2.5 rounded-2xl text-xs font-extrabold flex items-center space-x-2 shadow-xl whitespace-nowrap cursor-pointer hover:scale-105 transition-all"
+            >
+              <Zap className="w-4 h-4 text-[#2D001A]" />
+              <span>Simulate Lean Intervention</span>
+            </button>
+          ) : (
+            <span className="badge-citron px-4 py-2 rounded-2xl text-xs font-bold flex items-center space-x-2">
+              <ShieldCheck className="w-4 h-4 text-[#CAD183]" />
+              <span>Lean Optimized Operations Active</span>
+            </span>
+          )}
+        </div>
+      </div>
+
       {/* Top Banner Alert */}
       {!isLean ? (
-        <div className="bg-gradient-to-r from-[#4a2242] via-[#381932] to-[#251021] border border-[#FFF3E6]/25 rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
-          <div className="flex items-start space-x-3">
-            <div className="p-2 bg-[#FFF3E6]/10 rounded-xl border border-[#FFF3E6]/20 text-[#FFF3E6] mt-0.5">
-              <AlertTriangle className="w-5 h-5" />
+        <div className="bg-gradient-to-r from-[#66023C] via-[#4D032E] to-[#2D001A] border border-[#CAD183]/40 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-start space-x-3.5">
+            <div className="p-2.5 bg-[#CAD183]/15 rounded-xl border border-[#CAD183]/30 text-[#CAD183] mt-0.5">
+              <AlertTriangle className="w-5 h-5 text-[#CAD183]" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#FFF3E6]">
-                Peak Dispatch Bottleneck Detected at Workstation {bottleneckStation?.station_id || 'STATION-05'}
+              <h3 className="text-sm font-bold text-[#F8F9EE] font-serif-title">
+                Bottleneck Alert: Severe Throughput Throttling at Workstation {bottleneckStation?.station_id || 'STATION-05'}
               </h3>
-              <p className="text-xs text-[#FFF3E6]/80 mt-0.5">
-                Tape dispenser jams & cycle time variance are causing severe throughput throttling. Overall Cpk is{' '}
-                <span className="font-extrabold text-red-300">{spc.cpk} ({spc.cpk_status})</span>.
+              <p className="text-xs text-[#CAD183]/90 mt-1">
+                Tape dispenser jams & cycle variance are throttling line speed. Overall Cpk is{' '}
+                <span className="font-extrabold text-[#CAD183] bg-[#66023C] px-1.5 py-0.5 rounded border border-[#CAD183]/30">
+                  {spc.cpk} ({spc.cpk_status})
+                </span>.
               </p>
             </div>
           </div>
-          <button
-            onClick={onSwitchToLean}
-            className="flex items-center space-x-2 bg-[#FFF3E6] hover:bg-white text-[#381932] px-4 py-2 rounded-xl text-xs font-extrabold transition shadow-lg shadow-[#FFF3E6]/20 whitespace-nowrap"
-          >
-            <Zap className="w-4 h-4 text-[#381932]" />
-            <span>Simulate Lean Intervention</span>
-          </button>
         </div>
       ) : (
-        <div className="bg-gradient-to-r from-emerald-950/60 via-[#381932] to-[#251021] border border-emerald-400/40 rounded-2xl p-4 flex items-center space-x-3 shadow-xl">
-          <div className="p-2 bg-emerald-400/10 rounded-xl border border-emerald-400/30 text-emerald-300">
-            <ShieldCheck className="w-5 h-5" />
+        <div className="bg-gradient-to-r from-[#4D032E] via-[#2D001A] to-[#66023C] border border-[#CAD183]/60 rounded-2xl p-5 flex items-center space-x-3.5 shadow-xl">
+          <div className="p-2.5 bg-[#CAD183]/20 rounded-xl border border-[#CAD183]/40 text-[#CAD183]">
+            <ShieldCheck className="w-5 h-5 text-[#CAD183]" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-emerald-200">
-              Lean Line Balancing & Downtime Reduction Applied
+            <h3 className="text-sm font-bold text-[#F8F9EE] font-serif-title">
+              Lean Line Balancing & Poka-Yoke Applied Successfully
             </h3>
-            <p className="text-xs text-[#FFF3E6]/80 mt-0.5">
-              Yamazumi task rebalancing and Poka-Yoke SMED quick-fixes eliminated queueing delays and boosted Cpk to{' '}
-              <span className="font-extrabold text-emerald-300">{spc.cpk} ({spc.cpk_status})</span>.
+            <p className="text-xs text-[#CAD183]/90 mt-1">
+              Yamazumi task rebalancing & SMED quick-fixes eliminated queueing delays and boosted Cpk to{' '}
+              <span className="font-extrabold text-[#2D001A] bg-[#CAD183] px-2 py-0.5 rounded font-mono">
+                {spc.cpk} ({spc.cpk_status})
+              </span>.
             </p>
           </div>
         </div>
@@ -61,84 +102,84 @@ export default function ExecutiveOverview({ data, isLean, onSwitchToLean }) {
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* KPI 1: Throughput */}
-        <div className="glass-panel rounded-2xl p-5 relative overflow-hidden">
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#FFF3E6]/70 uppercase tracking-wider">Line Throughput</span>
-            <div className="p-2 rounded-xl bg-[#FFF3E6]/10 border border-[#FFF3E6]/20 text-[#FFF3E6]">
+            <span className="text-[11px] font-bold text-[#CAD183]/80 uppercase tracking-widest">Line Throughput</span>
+            <div className="p-2.5 rounded-xl bg-[#CAD183]/15 border border-[#CAD183]/30 text-[#CAD183]">
               <Zap className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-[#FFF3E6] tracking-tight">{sim.throughput_uph}</span>
-            <span className="text-xs font-semibold text-[#FFF3E6]/70">orders / hour</span>
+          <div className="mt-4 flex items-baseline justify-between">
+            <span className="text-3xl font-extrabold text-[#F8F9EE] tracking-tight font-mono">{sim.throughput_uph}</span>
+            <span className="text-xs font-semibold text-[#CAD183]/80">orders / hr</span>
           </div>
           <div className="mt-3 flex items-center text-xs">
             {isLean ? (
-              <span className="text-emerald-300 flex items-center font-bold">
-                <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" /> High Velocity Flow
+              <span className="text-[#CAD183] flex items-center font-bold">
+                <ArrowUpRight className="w-4 h-4 mr-0.5 text-[#CAD183]" /> High Velocity Flow (+{sim.throughput_uph - 240} UPH)
               </span>
             ) : (
-              <span className="text-amber-300 flex items-center font-bold">
-                <ArrowDownRight className="w-3.5 h-3.5 mr-0.5" /> Bottleneck Throttled
+              <span className="text-[#CAD183]/70 flex items-center font-bold">
+                <ArrowDownRight className="w-4 h-4 mr-0.5 text-[#CAD183]" /> Bottleneck Throttled
               </span>
             )}
           </div>
         </div>
 
         {/* KPI 2: Queue Delay */}
-        <div className="glass-panel rounded-2xl p-5 relative overflow-hidden">
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#FFF3E6]/70 uppercase tracking-wider">Avg Queue Delay</span>
-            <div className="p-2 rounded-xl bg-[#FFF3E6]/10 border border-[#FFF3E6]/20 text-[#FFF3E6]">
+            <span className="text-[11px] font-bold text-[#CAD183]/80 uppercase tracking-widest">Avg Queue Delay</span>
+            <div className="p-2.5 rounded-xl bg-[#CAD183]/15 border border-[#CAD183]/30 text-[#CAD183]">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-[#FFF3E6] tracking-tight">{sim.avg_queue_delay_s}s</span>
-            <span className="text-xs font-semibold text-[#FFF3E6]/70">per order</span>
+          <div className="mt-4 flex items-baseline justify-between">
+            <span className="text-3xl font-extrabold text-[#F8F9EE] tracking-tight font-mono">{sim.avg_queue_delay_s}s</span>
+            <span className="text-xs font-semibold text-[#CAD183]/80">per order</span>
           </div>
           <div className="mt-3 flex items-center text-xs">
-            <span className={`font-bold ${sim.avg_queue_delay_s > 30 ? 'text-red-300' : 'text-emerald-300'}`}>
+            <span className={`font-bold ${sim.avg_queue_delay_s > 30 ? 'text-[#F8F9EE] bg-[#66023C] px-2 py-0.5 rounded border border-[#CAD183]/30' : 'text-[#2D001A] bg-[#CAD183] px-2 py-0.5 rounded'}`}>
               {sim.avg_queue_delay_s > 30 ? 'High Station Queueing' : 'Zero Buffer Waiting'}
             </span>
           </div>
         </div>
 
         {/* KPI 3: Process Cpk Capability */}
-        <div className="glass-panel rounded-2xl p-5 relative overflow-hidden">
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#FFF3E6]/70 uppercase tracking-wider">Process Capability (Cpk)</span>
-            <div className="p-2 rounded-xl bg-[#FFF3E6]/10 border border-[#FFF3E6]/20 text-[#FFF3E6]">
+            <span className="text-[11px] font-bold text-[#CAD183]/80 uppercase tracking-widest">Process Capability (Cpk)</span>
+            <div className="p-2.5 rounded-xl bg-[#CAD183]/15 border border-[#CAD183]/30 text-[#CAD183]">
               <ShieldCheck className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className={`text-3xl font-extrabold tracking-tight ${spc.cpk >= 1.0 ? 'text-emerald-300' : 'text-red-300'}`}>
+          <div className="mt-4 flex items-baseline justify-between">
+            <span className="text-3xl font-extrabold text-[#CAD183] tracking-tight font-mono">
               {spc.cpk}
             </span>
-            <span className="text-xs font-semibold text-[#FFF3E6]/70">Cp: {spc.cp}</span>
+            <span className="text-xs font-semibold text-[#CAD183]/80">Cp: {spc.cp}</span>
           </div>
           <div className="mt-3 flex items-center text-xs">
-            <span className={`font-extrabold ${spc.cpk >= 1.0 ? 'text-emerald-300' : 'text-red-300'}`}>
+            <span className="font-extrabold text-[#CAD183] bg-[#66023C]/90 px-2 py-0.5 rounded border border-[#CAD183]/30">
               {spc.cpk_status}
             </span>
           </div>
         </div>
 
         {/* KPI 4: Overall OEE */}
-        <div className="glass-panel rounded-2xl p-5 relative overflow-hidden">
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#FFF3E6]/70 uppercase tracking-wider">Overall Line OEE</span>
-            <div className="p-2 rounded-xl bg-[#FFF3E6]/10 border border-[#FFF3E6]/20 text-[#FFF3E6]">
+            <span className="text-[11px] font-bold text-[#CAD183]/80 uppercase tracking-widest">Overall Line OEE</span>
+            <div className="p-2.5 rounded-xl bg-[#CAD183]/15 border border-[#CAD183]/30 text-[#CAD183]">
               <Activity className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-[#FFF3E6] tracking-tight">{oee.overall_oee_pct}%</span>
-            <span className="text-xs font-semibold text-[#FFF3E6]/70">Availability: {oee.avg_availability_pct}%</span>
+          <div className="mt-4 flex items-baseline justify-between">
+            <span className="text-3xl font-extrabold text-[#F8F9EE] tracking-tight font-mono">{oee.overall_oee_pct}%</span>
+            <span className="text-xs font-semibold text-[#CAD183]/80">Availability: {oee.avg_availability_pct}%</span>
           </div>
-          <div className="mt-3 flex items-center text-xs text-[#FFF3E6]/70">
-            <span>Quality Rate: <strong className="text-[#FFF3E6]">{oee.avg_quality_pct}%</strong></span>
+          <div className="mt-3 flex items-center text-xs text-[#CAD183]/90">
+            <span>Quality Rate: <strong className="text-[#CAD183] font-mono">{oee.avg_quality_pct}%</strong></span>
           </div>
         </div>
       </div>
@@ -146,86 +187,86 @@ export default function ExecutiveOverview({ data, isLean, onSwitchToLean }) {
       {/* Bottleneck Workstation Spotlight Card & Stage Cycle Times */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Spotlight Card */}
-        <div className="glass-panel rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-[#FFF3E6] flex items-center space-x-2">
-              <Cpu className="w-4 h-4 text-[#FFF3E6]" />
+        <div className="glass-panel rounded-3xl p-6 relative overflow-hidden">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-base font-bold text-[#F8F9EE] font-serif-title flex items-center space-x-2">
+              <Cpu className="w-5 h-5 text-[#CAD183]" />
               <span>Primary Bottleneck Station</span>
             </h3>
-            <span className="text-xs font-mono font-bold bg-[#FFF3E6]/15 text-[#FFF3E6] px-2.5 py-1 rounded border border-[#FFF3E6]/30">
+            <span className="text-xs font-mono font-bold bg-[#CAD183] text-[#2D001A] px-3 py-1 rounded-lg">
               {bottleneckStation?.station_id}
             </span>
           </div>
 
           <div className="space-y-4 text-xs">
-            <div className="flex justify-between items-center py-2 border-b border-[#FFF3E6]/10">
-              <span className="text-[#FFF3E6]/70">Station Utilization</span>
-              <span className="font-bold text-[#FFF3E6]">{bottleneckStation?.utilization_pct}%</span>
+            <div className="flex justify-between items-center py-2.5 border-b border-[#CAD183]/15">
+              <span className="text-[#CAD183]/80 font-medium">Station Utilization</span>
+              <span className="font-bold text-[#CAD183] font-mono">{bottleneckStation?.utilization_pct}%</span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-[#FFF3E6]/10">
-              <span className="text-[#FFF3E6]/70">Avg Station Queue Delay</span>
-              <span className="font-bold text-[#FFF3E6]">{bottleneckStation?.avg_wait_time_s}s</span>
+            <div className="flex justify-between items-center py-2.5 border-b border-[#CAD183]/15">
+              <span className="text-[#CAD183]/80 font-medium">Avg Station Queue Delay</span>
+              <span className="font-bold text-[#F8F9EE] font-mono">{bottleneckStation?.avg_wait_time_s}s</span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-[#FFF3E6]/10">
-              <span className="text-[#FFF3E6]/70">Total Downtime Logged</span>
-              <span className="font-bold text-red-300">{bottleneckStation?.total_downtime_s}s</span>
+            <div className="flex justify-between items-center py-2.5 border-b border-[#CAD183]/15">
+              <span className="text-[#CAD183]/80 font-medium">Total Downtime Logged</span>
+              <span className="font-bold text-[#CAD183] font-mono">{bottleneckStation?.total_downtime_s}s</span>
             </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-[#FFF3E6]/70">Defect Rate</span>
-              <span className="font-bold text-red-300">{bottleneckStation?.defect_rate_pct}%</span>
+            <div className="flex justify-between items-center py-2.5">
+              <span className="text-[#CAD183]/80 font-medium">Defect Rate</span>
+              <span className="font-bold text-[#CAD183] font-mono">{bottleneckStation?.defect_rate_pct}%</span>
             </div>
           </div>
         </div>
 
         {/* Packing Pipeline Stage Distribution */}
-        <div className="lg:col-span-2 glass-panel rounded-2xl p-6">
-          <h3 className="text-sm font-bold text-[#FFF3E6] mb-4 flex items-center space-x-2">
-            <Layers className="w-4 h-4 text-[#FFF3E6]" />
+        <div className="lg:col-span-2 glass-panel rounded-3xl p-6">
+          <h3 className="text-base font-bold text-[#F8F9EE] font-serif-title mb-5 flex items-center space-x-2">
+            <Layers className="w-5 h-5 text-[#CAD183]" />
             <span>4-Stage Packing Cycle Allocation (Pre vs Target Standard)</span>
           </h3>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             {/* Stage 1: Scanning */}
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-[#FFF3E6]/90 font-medium">1. Barcode Scan & SKU Verification</span>
-                <span className="font-mono text-[#FFF3E6]/70">7.5s (13%)</span>
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-[#F8F9EE] font-semibold">1. Barcode Scan & SKU Verification</span>
+                <span className="font-mono text-[#CAD183]">7.5s (13%)</span>
               </div>
-              <div className="w-full bg-[#251021] rounded-full h-2.5 overflow-hidden border border-[#FFF3E6]/10">
-                <div className="bg-[#a855f7] h-2.5 rounded-full" style={{ width: '13%' }}></div>
+              <div className="w-full bg-[#200012] rounded-full h-3 overflow-hidden border border-[#CAD183]/20">
+                <div className="bg-[#8A0A54] h-3 rounded-full" style={{ width: '13%' }}></div>
               </div>
             </div>
 
             {/* Stage 2: Packing */}
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-[#FFF3E6] font-bold">2. Dunnage & Box Taping (Bottleneck Stage)</span>
-                <span className="font-mono text-[#FFF3E6] font-bold">28.0s (58%)</span>
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-[#F8F9EE] font-bold">2. Dunnage & Box Taping (Bottleneck Stage)</span>
+                <span className="font-mono text-[#CAD183] font-bold">{isLean ? '14.0s (35%)' : '28.0s (58%)'}</span>
               </div>
-              <div className="w-full bg-[#251021] rounded-full h-2.5 overflow-hidden border border-[#FFF3E6]/10">
-                <div className="bg-[#FFF3E6] h-2.5 rounded-full" style={{ width: isLean ? '35%' : '58%' }}></div>
+              <div className="w-full bg-[#200012] rounded-full h-3 overflow-hidden border border-[#CAD183]/20">
+                <div className="bg-[#CAD183] h-3 rounded-full shadow-[0_0_12px_rgba(202,209,131,0.5)]" style={{ width: isLean ? '35%' : '58%' }}></div>
               </div>
             </div>
 
             {/* Stage 3: Weight Check */}
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-[#FFF3E6]/90 font-medium">3. Mass Scale Verification</span>
-                <span className="font-mono text-[#FFF3E6]/70">10.0s (18%)</span>
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-[#F8F9EE] font-semibold">3. Mass Scale Verification</span>
+                <span className="font-mono text-[#CAD183]">10.0s (18%)</span>
               </div>
-              <div className="w-full bg-[#251021] rounded-full h-2.5 overflow-hidden border border-[#FFF3E6]/10">
-                <div className="bg-[#c084fc] h-2.5 rounded-full" style={{ width: '18%' }}></div>
+              <div className="w-full bg-[#200012] rounded-full h-3 overflow-hidden border border-[#CAD183]/20">
+                <div className="bg-[#66023C] h-3 rounded-full" style={{ width: '18%' }}></div>
               </div>
             </div>
 
             {/* Stage 4: Manifesting */}
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-[#FFF3E6]/90 font-medium">4. Shipping Label Manifesting</span>
-                <span className="font-mono text-[#FFF3E6]/70">11.5s (11%)</span>
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-[#F8F9EE] font-semibold">4. Shipping Label Manifesting</span>
+                <span className="font-mono text-[#CAD183]">11.5s (11%)</span>
               </div>
-              <div className="w-full bg-[#251021] rounded-full h-2.5 overflow-hidden border border-[#FFF3E6]/10">
-                <div className="bg-emerald-400 h-2.5 rounded-full" style={{ width: '11%' }}></div>
+              <div className="w-full bg-[#200012] rounded-full h-3 overflow-hidden border border-[#CAD183]/20">
+                <div className="bg-[#E5EB9E] h-3 rounded-full" style={{ width: '11%' }}></div>
               </div>
             </div>
           </div>

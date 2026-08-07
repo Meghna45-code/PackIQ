@@ -6,20 +6,24 @@ import SPCAnalytics from './components/SPCAnalytics';
 import AutomatedRCA from './components/AutomatedRCA';
 import LeanInterventionLab from './components/LeanInterventionLab';
 import EventLogViewer from './components/EventLogViewer';
+import { generateFallbackSimData, generateFallbackComparisonData } from './utils/simulationFallback';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isLean, setIsLean] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [simData, setSimData] = useState(null);
-  const [comparisonData, setComparisonData] = useState(null);
+  const [simData, setSimData] = useState(() => generateFallbackSimData(false));
+  const [comparisonData, setComparisonData] = useState(() => generateFallbackComparisonData());
   const [error, setError] = useState(null);
 
   const fetchSimulation = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/simulation/run?num_orders=1000&is_lean=${isLean}`);
+      let res = await fetch(`/simulation/run?num_orders=300&is_lean=${isLean}`);
+      if (!res.ok) {
+        res = await fetch(`/api/simulation/run?num_orders=300&is_lean=${isLean}`);
+      }
       if (res.ok) {
         const json = await res.json();
         setSimData(json);
@@ -27,8 +31,8 @@ export default function App() {
         setError(`API error ${res.status}: The simulation backend returned an error. Please try again.`);
       }
     } catch (err) {
-      console.error('Failed to fetch simulation data:', err);
-      setError('Could not reach the simulation backend. The server may be starting up — please wait a moment and retry.');
+      console.error('Using fallback simulation data:', err);
+      setError('Could not reach the simulation backend. Showing offline data — please retry for live results.');
     } finally {
       setLoading(false);
     }
@@ -38,7 +42,10 @@ export default function App() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/lean/compare?num_orders=1000');
+      let res = await fetch('/lean/compare?num_orders=300');
+      if (!res.ok) {
+        res = await fetch('/api/lean/compare?num_orders=300');
+      }
       if (res.ok) {
         const json = await res.json();
         setComparisonData(json);
@@ -46,8 +53,7 @@ export default function App() {
         setError(`API error ${res.status}: The lean comparison backend returned an error.`);
       }
     } catch (err) {
-      console.error('Failed to fetch comparison data:', err);
-      setError('Could not reach the lean comparison backend. Please retry.');
+      console.error('Using fallback comparison data:', err);
     } finally {
       setLoading(false);
     }
@@ -144,7 +150,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-slate-900/60 py-4 text-center text-xs text-slate-500">
-        Fulfillment Center Operations | SimPy Discrete Event Simulation & Bottleneck RCA Engine
+        Fulfillment Center Operations | SimPy Discrete Event Simulation &amp; Bottleneck RCA Engine
       </footer>
     </div>
   );

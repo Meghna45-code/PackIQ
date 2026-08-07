@@ -2,8 +2,8 @@
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
   "functions": {
-    "api/index.py": {
-      "runtime": "vercel-python@0.7.4"
+    "api/*.py": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
@@ -12,12 +12,5 @@
     { "source": "/logs", "destination": "/api/index.py" },
     { "source": "/health", "destination": "/api/index.py" },
     { "source": "/api/(.*)", "destination": "/api/index.py" }
-  ],
-  "functions": {
-    "api/index.py": {
-      "runtime": "python3.11",
-      "maxDuration": 60
-    }
-  }
+  ]
 }
-

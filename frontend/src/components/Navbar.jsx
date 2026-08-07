@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, Activity, Cpu, Sliders, FileText, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Package, Activity, Cpu, Sliders, FileText, AlertTriangle, RefreshCw, Sparkles } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, isLean, setIsLean, onRefresh, loading }) {
   const tabs = [
@@ -12,49 +12,51 @@ export default function Navbar({ activeTab, setActiveTab, isLean, setIsLean, onR
   ];
 
   return (
-    <header className="border-b border-[#FFF3E6]/10 bg-[#251021]/95 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-[#CAD183]/20 bg-[#200012]/95 backdrop-blur-md sticky top-0 z-50 shadow-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand Logo & Title */}
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FFF3E6] to-[#a855f7] p-0.5 shadow-lg shadow-[#381932]/50">
-              <div className="w-full h-full bg-[#381932] rounded-[10px] flex items-center justify-center">
-                <Package className="w-5 h-5 text-[#FFF3E6]" />
+        <div className="flex items-center justify-between h-20">
+          {/* Brand Logo & Editorial Title */}
+          <div className="flex items-center space-x-3.5">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#CAD183] via-[#8A0A54] to-[#66023C] p-0.5 shadow-lg shadow-[#66023C]/50">
+              <div className="w-full h-full bg-[#2D001A] rounded-[10px] flex items-center justify-center">
+                <Package className="w-6 h-6 text-[#CAD183]" />
               </div>
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#FFF3E6] bg-[#FFF3E6]/15 px-2 py-0.5 rounded border border-[#FFF3E6]/25">
-                  Ops Unit
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#CAD183] bg-[#CAD183]/15 px-2 py-0.5 rounded border border-[#CAD183]/30">
+                  PackIQ Operational Unit
                 </span>
-                <span className="text-xs font-medium text-[#FFF3E6]/70">Fulfillment Center Operations Engine</span>
+                <span className="text-xs text-[#CAD183]/70 font-mono flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-[#CAD183]" /> Citron & Tyrian Purple Theme
+                </span>
               </div>
-              <h1 className="text-lg font-bold text-[#FFF3E6] tracking-tight">
-                Packing-Line Lean Simulation & Bottleneck RCA Engine
+              <h1 className="text-xl font-bold text-[#F8F9EE] tracking-tight font-serif-title mt-0.5">
+                Packing-Line Simulation & Bottleneck RCA Engine
               </h1>
             </div>
           </div>
 
-          {/* Controls & Quick Toggles */}
+          {/* Controls & Mode Switch */}
           <div className="flex items-center space-x-4">
             {/* Mode Switch: Baseline vs Lean */}
-            <div className="flex items-center bg-[#1c0c19] p-1 rounded-lg border border-[#FFF3E6]/15">
+            <div className="flex items-center bg-[#2D001A] p-1 rounded-xl border border-[#CAD183]/25 shadow-inner">
               <button
                 onClick={() => setIsLean(false)}
-                className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   !isLean
-                    ? 'bg-[#FFF3E6] text-[#381932] shadow-md shadow-[#FFF3E6]/20'
-                    : 'text-[#FFF3E6]/60 hover:text-[#FFF3E6]'
+                    ? 'bg-[#66023C] text-[#CAD183] border border-[#CAD183]/40 shadow-md shadow-[#66023C]/40'
+                    : 'text-[#F8F9EE]/70 hover:text-[#CAD183]'
                 }`}
               >
                 Pre-Intervention (Baseline)
               </button>
               <button
                 onClick={() => setIsLean(true)}
-                className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   isLean
-                    ? 'bg-emerald-400 text-slate-950 shadow-md shadow-emerald-400/20'
-                    : 'text-[#FFF3E6]/60 hover:text-[#FFF3E6]'
+                    ? 'bg-[#CAD183] text-[#2D001A] shadow-md shadow-[#CAD183]/30'
+                    : 'text-[#F8F9EE]/70 hover:text-[#CAD183]'
                 }`}
               >
                 Post-Intervention (Lean)
@@ -65,16 +67,16 @@ export default function Navbar({ activeTab, setActiveTab, isLean, setIsLean, onR
             <button
               onClick={onRefresh}
               disabled={loading}
-              className="flex items-center space-x-1.5 bg-[#4a2242] hover:bg-[#58264e] text-[#FFF3E6] px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-[#FFF3E6]/20 transition"
+              className="flex items-center space-x-1.5 bg-[#66023C] hover:bg-[#8A0A54] text-[#CAD183] px-4 py-2 rounded-xl text-xs font-bold border border-[#CAD183]/30 transition shadow-lg hover:shadow-[#CAD183]/20"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#FFF3E6]' : ''}`} />
-              <span>Run Sim</span>
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#CAD183]' : ''}`} />
+              <span>Run Simulation</span>
             </button>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <nav className="flex space-x-1 overflow-x-auto py-2 no-scrollbar border-t border-[#FFF3E6]/10">
+        <nav className="flex space-x-1.5 overflow-x-auto py-2.5 no-scrollbar border-t border-[#CAD183]/15">
           {tabs.map((t) => {
             const Icon = t.icon;
             const active = activeTab === t.id;
@@ -82,13 +84,13 @@ export default function Navbar({ activeTab, setActiveTab, isLean, setIsLean, onR
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                   active
-                    ? 'bg-[#FFF3E6]/15 text-[#FFF3E6] border border-[#FFF3E6]/40 font-bold shadow-sm'
-                    : 'text-[#FFF3E6]/60 hover:text-[#FFF3E6] hover:bg-[#4a2242]/50'
+                    ? 'bg-[#CAD183] text-[#2D001A] font-bold shadow-lg shadow-[#CAD183]/20 scale-[1.02]'
+                    : 'text-[#F8F9EE]/70 hover:text-[#CAD183] hover:bg-[#4D032E]/60 border border-transparent'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${active ? 'text-[#FFF3E6]' : 'text-[#FFF3E6]/60'}`} />
+                <Icon className={`w-4 h-4 ${active ? 'text-[#2D001A]' : 'text-[#CAD183]'}`} />
                 <span>{t.label}</span>
               </button>
             );

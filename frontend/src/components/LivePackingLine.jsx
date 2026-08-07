@@ -24,14 +24,14 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
   return (
     <div className="space-y-6">
       {/* Simulation Controls Toolbar */}
-      <div className="glass-panel rounded-2xl p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-[#FFF3E6]/10 rounded-xl border border-[#FFF3E6]/20 text-[#FFF3E6]">
-            <Cpu className="w-5 h-5" />
+      <div className="glass-panel rounded-3xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-[#CAD183]/30 shadow-2xl">
+        <div className="flex items-center space-x-3.5">
+          <div className="p-2.5 bg-[#CAD183]/15 rounded-2xl border border-[#CAD183]/30 text-[#CAD183]">
+            <Cpu className="w-6 h-6 text-[#CAD183]" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#FFF3E6]">10-Workstation Packing Line SimPy Visualizer</h3>
-            <p className="text-xs text-[#FFF3E6]/70">Real-time Order Dispatch Pipeline (Scanning $\rightarrow$ Packing $\rightarrow$ Weight Check $\rightarrow$ Manifesting)</p>
+            <h3 className="text-base font-bold text-[#F8F9EE] font-serif-title">10-Workstation Packing Line Visualizer</h3>
+            <p className="text-xs text-[#CAD183]/80 mt-0.5">Real-time Order Flow (Scanning $\rightarrow$ Packing $\rightarrow$ Scale Weight $\rightarrow$ Manifest Label)</p>
           </div>
         </div>
 
@@ -39,10 +39,10 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
           {/* Play/Pause */}
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className={`p-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition ${
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center space-x-2 transition ${
               isPlaying
-                ? 'bg-[#FFF3E6]/20 text-[#FFF3E6] border border-[#FFF3E6]/40'
-                : 'bg-[#FFF3E6] text-[#381932] font-extrabold'
+                ? 'bg-[#CAD183] text-[#2D001A] shadow-md shadow-[#CAD183]/20'
+                : 'bg-[#66023C] text-[#CAD183] border border-[#CAD183]/40'
             }`}
           >
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -50,13 +50,13 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
           </button>
 
           {/* Speed Selector */}
-          <div className="flex items-center bg-[#1c0c19] rounded-xl p-1 border border-[#FFF3E6]/15 text-xs">
+          <div className="flex items-center bg-[#200012] rounded-xl p-1 border border-[#CAD183]/25 text-xs">
             {[1, 2, 5].map((s) => (
               <button
                 key={s}
                 onClick={() => setSpeed(s)}
-                className={`px-2.5 py-1 rounded-lg font-mono font-bold transition ${
-                  speed === s ? 'bg-[#58264e] text-[#FFF3E6]' : 'text-[#FFF3E6]/60 hover:text-[#FFF3E6]'
+                className={`px-3 py-1 rounded-lg font-mono font-bold transition ${
+                  speed === s ? 'bg-[#66023C] text-[#CAD183] border border-[#CAD183]/30' : 'text-[#CAD183]/70 hover:text-[#CAD183]'
                 }`}
               >
                 {s}x
@@ -66,9 +66,9 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
 
           <button
             onClick={() => setActiveStep(0)}
-            className="p-2 bg-[#4a2242] hover:bg-[#58264e] text-[#FFF3E6] rounded-xl border border-[#FFF3E6]/20"
+            className="p-2 bg-[#66023C] hover:bg-[#8A0A54] text-[#CAD183] rounded-xl border border-[#CAD183]/30 transition"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-4 h-4 text-[#CAD183]" />
           </button>
         </div>
       </div>
@@ -82,27 +82,27 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
           return (
             <div
               key={st.station_id}
-              className={`glass-panel rounded-2xl p-4 transition-all duration-300 relative ${
+              className={`glass-panel rounded-3xl p-5 transition-all duration-300 relative ${
                 isDown
-                  ? 'border-red-400/50 bg-red-950/30 glow-down'
-                  : 'border-[#FFF3E6]/15 hover:border-[#FFF3E6]/30 glow-active'
+                  ? 'border-red-500/60 bg-[#66023C]/60 glow-down'
+                  : 'border-[#CAD183]/25 hover:border-[#CAD183]/60 glow-active'
               }`}
             >
               {/* Station Header */}
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3.5">
                 <div className="flex items-center space-x-2">
                   <span
                     className={`w-2.5 h-2.5 rounded-full ${
-                      isDown ? 'bg-red-400 animate-ping' : 'bg-emerald-400'
+                      isDown ? 'bg-red-400 animate-ping' : 'bg-[#CAD183]'
                     }`}
                   ></span>
-                  <span className="text-xs font-bold font-mono text-[#FFF3E6]">{st.station_id}</span>
+                  <span className="text-xs font-bold font-mono text-[#F8F9EE]">{st.station_id}</span>
                 </div>
                 <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                  className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
                     isDown
-                      ? 'bg-red-500/20 text-red-300 border-red-500/40'
-                      : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                      ? 'bg-red-500/20 text-red-200 border-red-500/40'
+                      : 'bg-[#CAD183]/20 text-[#CAD183] border-[#CAD183]/40'
                   }`}
                 >
                   {isDown ? 'DOWN' : 'ACTIVE'}
@@ -110,7 +110,7 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
               </div>
 
               {/* Workstation Stage Progress Animation */}
-              <div className="bg-[#1c0c19]/90 rounded-xl p-2 mb-3 border border-[#FFF3E6]/10">
+              <div className="bg-[#200012]/90 rounded-2xl p-2 mb-3.5 border border-[#CAD183]/15">
                 <div className="grid grid-cols-4 gap-1 text-center">
                   {stages.map((stage, sIdx) => {
                     const StageIcon = stage.icon;
@@ -118,13 +118,13 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
                     return (
                       <div
                         key={stage.name}
-                        className={`p-1.5 rounded-lg flex flex-col items-center justify-center transition-all ${
+                        className={`p-1.5 rounded-xl flex flex-col items-center justify-center transition-all ${
                           isActive
-                            ? 'bg-[#FFF3E6] text-[#381932] font-bold scale-105 shadow-sm'
-                            : 'bg-[#251021] text-[#FFF3E6]/40'
+                            ? 'bg-[#CAD183] text-[#2D001A] font-extrabold scale-105 shadow-md'
+                            : 'bg-[#2D001A] text-[#CAD183]/50'
                         }`}
                       >
-                        <StageIcon className={`w-3.5 h-3.5 ${isActive ? 'text-[#381932]' : 'text-[#FFF3E6]/40'}`} />
+                        <StageIcon className={`w-3.5 h-3.5 ${isActive ? 'text-[#2D001A]' : 'text-[#CAD183]/50'}`} />
                         <span className="text-[9px] mt-1 font-semibold">{stage.name}</span>
                       </div>
                     );
@@ -133,28 +133,28 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
               </div>
 
               {/* Metrics & Queue Info */}
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between items-center text-[#FFF3E6]/70">
+              <div className="space-y-2.5 text-xs">
+                <div className="flex justify-between items-center text-[#CAD183]/80">
                   <span>Packed Orders:</span>
-                  <span className="font-bold text-[#FFF3E6] font-mono">{st.orders_processed}</span>
+                  <span className="font-bold text-[#F8F9EE] font-mono">{st.orders_processed}</span>
                 </div>
 
-                <div className="flex justify-between items-center text-[#FFF3E6]/70">
+                <div className="flex justify-between items-center text-[#CAD183]/80">
                   <span>Queue Wait:</span>
-                  <span className={`font-mono font-bold ${st.avg_wait_time_s > 25 ? 'text-red-300' : 'text-emerald-300'}`}>
+                  <span className={`font-mono font-bold ${st.avg_wait_time_s > 25 ? 'text-red-300' : 'text-[#CAD183]'}`}>
                     {st.avg_wait_time_s}s
                   </span>
                 </div>
 
                 {/* Utilization Progress */}
                 <div>
-                  <div className="flex justify-between text-[10px] text-[#FFF3E6]/70 mb-1">
+                  <div className="flex justify-between text-[10px] text-[#CAD183]/80 mb-1">
                     <span>Utilization</span>
-                    <span className="font-mono text-[#FFF3E6] font-bold">{st.utilization_pct}%</span>
+                    <span className="font-mono text-[#CAD183] font-bold">{st.utilization_pct}%</span>
                   </div>
-                  <div className="w-full bg-[#1c0c19] rounded-full h-1.5 overflow-hidden border border-[#FFF3E6]/10">
+                  <div className="w-full bg-[#200012] rounded-full h-2 overflow-hidden border border-[#CAD183]/20">
                     <div
-                      className="bg-[#FFF3E6] h-1.5 rounded-full transition-all duration-500"
+                      className="bg-[#CAD183] h-2 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(202,209,131,0.5)]"
                       style={{ width: `${st.utilization_pct}%` }}
                     ></div>
                   </div>
@@ -163,8 +163,8 @@ export default function LivePackingLine({ stationMetrics = [], logs = [], isLean
 
               {/* Downtime Alert Tag */}
               {isDown && (
-                <div className="mt-3 p-1.5 bg-red-500/20 border border-red-500/40 rounded-lg flex items-center space-x-1.5 text-[10px] text-red-200 font-bold">
-                  <AlertTriangle className="w-3 h-3 text-red-400 flex-shrink-0" />
+                <div className="mt-3 p-2 bg-red-500/20 border border-red-500/40 rounded-xl flex items-center space-x-1.5 text-[10px] text-red-200 font-bold">
+                  <AlertTriangle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
                   <span className="truncate">Tape Dispenser Jam Breakdown</span>
                 </div>
               )}

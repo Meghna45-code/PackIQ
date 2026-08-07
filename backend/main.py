@@ -50,10 +50,29 @@ def sanitize_numpy(obj: Any) -> Any:
     else:
         return obj
 
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+frontend_dist = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+
+if os.path.exists(os.path.join(frontend_dist, "assets")):
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+
+@app.get("/")
+def read_root():
+    index_file = os.path.join(frontend_dist, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"status": "healthy", "service": "Packing Line Simulation Engine"}
+
+@app.get("/api")
 @app.get("/api/health")
+@app.get("/health")
 def health_check():
     return {"status": "healthy", "service": "Packing Line Simulation Engine"}
 
+@app.get("/simulation/run")
 @app.get("/api/simulation/run")
 def run_simulation(
     num_orders: int = Query(1000, ge=100, le=5000),
@@ -83,6 +102,7 @@ def run_simulation(
     }
     return sanitize_numpy(payload)
 
+@app.get("/lean/compare")
 @app.get("/api/lean/compare")
 def compare_lean_intervention(
     num_orders: int = Query(1000, ge=100, le=5000),
@@ -156,6 +176,7 @@ def compare_lean_intervention(
     }
     return sanitize_numpy(payload)
 
+@app.get("/logs")
 @app.get("/api/logs")
 def get_order_logs(
     num_orders: int = Query(1000),

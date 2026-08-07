@@ -13,17 +13,22 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [simData, setSimData] = useState(null);
   const [comparisonData, setComparisonData] = useState(null);
+  const [error, setError] = useState(null);
 
   const fetchSimulation = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch(`/api/simulation/run?num_orders=1000&is_lean=${isLean}`);
       if (res.ok) {
         const json = await res.json();
         setSimData(json);
+      } else {
+        setError(`API error ${res.status}: The simulation backend returned an error. Please try again.`);
       }
     } catch (err) {
       console.error('Failed to fetch simulation data:', err);
+      setError('Could not reach the simulation backend. The server may be starting up — please wait a moment and retry.');
     } finally {
       setLoading(false);
     }
@@ -31,14 +36,18 @@ export default function App() {
 
   const fetchComparison = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/lean/compare?num_orders=1000');
       if (res.ok) {
         const json = await res.json();
         setComparisonData(json);
+      } else {
+        setError(`API error ${res.status}: The lean comparison backend returned an error.`);
       }
     } catch (err) {
       console.error('Failed to fetch comparison data:', err);
+      setError('Could not reach the lean comparison backend. Please retry.');
     } finally {
       setLoading(false);
     }
@@ -64,10 +73,23 @@ export default function App() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {error && (
+          <div className="mb-4 rounded-lg border border-red-500/40 bg-red-950/40 px-4 py-3 flex items-start gap-3">
+            <span className="text-red-400 text-lg mt-0.5">⚠️</span>
+            <div className="flex-1">
+              <p className="text-red-300 text-sm">{error}</p>
+              <p className="text-slate-400 text-xs mt-1">The simulation is CPU-intensive — cold starts on Vercel may take up to 30s on first load.</p>
+            </div>
+            <button
+              onClick={fetchSimulation}
+              className="text-xs text-amber-400 border border-amber-500/40 rounded px-2 py-1 hover:bg-amber-500/10 transition"
+            >Retry</button>
+          </div>
+        )}
         {loading && !simData ? (
           <div className="h-96 flex items-center justify-center space-x-3 text-amber-400">
             <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-sm font-semibold">Running SimPy Discrete Event Simulation Engine...</span>
+            <span className="text-sm font-semibold">Running SimPy Discrete Event Simulation Engine... (may take 20–30s on cold start)</span>
           </div>
         ) : (
           <>
